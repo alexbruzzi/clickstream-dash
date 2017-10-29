@@ -105,3 +105,4 @@ venv.bak/
 
 # Astronomer Added
 .linter-py_*
+data/*
