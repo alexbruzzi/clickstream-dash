@@ -32,7 +32,7 @@ for filename, _ in queries:
 i = 0
 while True:
 # for i in range(2):
-    print(f'run {i}')
+    print(f'run {i} start...', end=' ', flush=True)
 
     for filename, query in queries:
         ts = datetime.datetime.now()
@@ -40,8 +40,9 @@ while True:
         df['timestamp'] = ts
 
         all_dfs[filename] = all_dfs[filename].append(df, ignore_index=True, verify_integrity=True)
+        all_dfs[filename].to_json(f'data/{filename}.json')
 
-    all_dfs[filename].to_json(f'data/{filename}.json')
+    print('done.')
 
     time.sleep(60)
     # time.sleep(5)
