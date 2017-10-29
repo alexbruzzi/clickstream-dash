@@ -24,6 +24,10 @@ queries = [
         'task_instance_count_by_day',
         open('sql/task_instance_count_by_day.sql').read(),
     ),
+    (
+        'task_instance_count_total',
+        open('sql/task_instance_count_total.sql').read(),
+    ),
 ]
 
 for filename, _ in queries:
