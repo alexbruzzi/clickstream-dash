@@ -11,7 +11,7 @@ import pandas as pd
 import os
 from flask import Flask
 
-df = pd.read_json('data.json').sort_values(by = 'timestamp')
+df = pd.read_json('data/task_instance_state_groups.json').sort_values(by = 'timestamp')
 
 data = {}
 for state in df['state'].tolist():
