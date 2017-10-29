@@ -20,6 +20,10 @@ queries = [
         'task_instance_state_groups',
         'select state, count(*) from task_instance group by state;',
     ),
+    (
+        'task_instance_count_by_day',
+        open('sql/task_instance_count_by_day.sql').read(),
+    ),
 ]
 
 for filename, _ in queries:
