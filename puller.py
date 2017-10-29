@@ -13,23 +13,35 @@ AIRFLOW_POSTGRES = os.environ['AIRFLOW_POSTGRES']
 
 conn = psycopg2.connect(AIRFLOW_POSTGRES)
 
-all_df = pd.DataFrame()
+all_dfs = {}
+
+queries = [
+    (
+        'task_instance_state_groups',
+        'select state, count(*) from task_instance group by state;',
+    ),
+]
+
+for filename, _ in queries:
+    all_dfs[filename] = pd.DataFrame()
 
 i = 0
 while True:
 # for i in range(2):
     print(f'run {i}')
+
+    for filename, query in queries:
+        ts = datetime.datetime.now()
+        df = pd.read_sql(query, conn)
+        df['timestamp'] = ts
+
+        all_dfs[filename] = all_dfs[filename].append(df, ignore_index=True, verify_integrity=True)
+
+    all_dfs[filename].to_json(f'data/{filename}.json')
+
     time.sleep(60)
     # time.sleep(5)
 
-    ts = datetime.datetime.now()
-    df = pd.read_sql('select state, count(*) from task_instance group by state;', conn)
-    df['timestamp'] = ts
-
-    all_df = all_df.append(df, ignore_index=True, verify_integrity=True)
-    # all_df = all_df.append(df)
-
     # del df
 
-    all_df.to_json('data.json')
     i += 1
