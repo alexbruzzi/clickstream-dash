@@ -27,7 +27,10 @@ queries = [
     (
         'redshift_copy_state',
         open('sql/redshift_copy_state.sql').read(),
-    )
+    ),
+        'task_instance_count_total',
+        open('sql/task_instance_count_total.sql').read(),
+    ),
 ]
 
 for filename, _ in queries:
@@ -36,10 +39,9 @@ for filename, _ in queries:
 i = 0
 
 #task instance state groups over a 5 minute span.
-while i <= 5:
+while True:
 # for i in range(2):
-    print(f'run {i}')
-    print(filename)
+    print(f'run {i} start...', end=' ', flush=True)
 
     for filename, query in queries:
         ts = datetime.datetime.now()
@@ -47,8 +49,8 @@ while i <= 5:
         df['timestamp'] = ts
 
         all_dfs[filename] = all_dfs[filename].append(df, ignore_index=True, verify_integrity=True)
+        all_dfs[filename].to_json(f'data/{filename}.json')
 
         all_dfs[filename].to_json(f'data/{filename}.json')
 
     time.sleep(60)
-    i += 1
